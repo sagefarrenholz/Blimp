@@ -1,0 +1,19 @@
+﻿  pch.cpp
+  Bitmap.cpp
+d:\bmp library\bitmap\bitmap\bitmap.h(10): warning C4810: value of pragma pack(show) == 2
+d:\bmp library\bitmap\bitmap\bitmap.cpp(77): warning C4244: '=': conversion from 'double' to 'long', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(79): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(154): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(166): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(177): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(188): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(199): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(210): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+d:\bmp library\bitmap\bitmap\bitmap.cpp(305): warning C4838: conversion from 'uint32_t' to 'const uint16_t' requires a narrowing conversion
+d:\bmp library\bitmap\bitmap\bitmap.cpp(305): warning C4838: conversion from 'uint32_t' to 'const int32_t' requires a narrowing conversion
+  Padding.cpp
+d:\bmp library\bitmap\bitmap\bitmap.h(10): warning C4810: value of pragma pack(show) == 2
+  Bitmap_Anaylze.cpp
+d:\bmp library\bitmap\bitmap\bitmap.h(10): warning C4810: value of pragma pack(show) == 2
+  Generating Code...
+  Bitmap.vcxproj -> D:\BMP Library\Bitmap\Debug\Bitmap.exe
