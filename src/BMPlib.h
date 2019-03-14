@@ -35,7 +35,7 @@ struct BMP_HEADER {
 /*
 --
 --		These typedefs are used to help users understand at what depth a certain color
---	is expected to be.
+--	is expected to be or assist users create colors.
 --
 */
 typedef uint8_t* color;		//Bitdepth Abstracted 
@@ -254,7 +254,7 @@ class BMP {
 	std::vector<pixel> pixeldata = std::vector<pixel>(x_size*y_size);
 
 	//color24 palette for low bit depth images
-	//std::vector<color24> palette {0};
+	std::vector<color24> palette {0};
 
 	//Output Directory
 	std::string outlocation = "myimage.bmp";
@@ -342,6 +342,9 @@ class BMP {
 
 	//Fill one row with a color
 	int fillRow(int32_t row, color);
+
+	//Fill one col with a color
+	int fillCol(int32_t col, color);
 
 	//Fill one column with a color
 	//int fillColumn(int32_t col, color);

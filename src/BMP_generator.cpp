@@ -57,7 +57,6 @@ int BMP::generateBMP(void) {
 		for (int32_t col = 0; col < x_size; col++) {
 			//Prints at least 1 byte, 2 for 16 bit depth, and 3 for 24 bit depth
 			#define p (unsigned)pixeldata[(x_size * (row - 1)) + col]
-			//std::cout << "COL: " << col << " ROW: " << row - 1 <<  " IND: " << (x_size * (row - 1)) + col <<  " COLOR: " << p.color24bit[0] << " " << p.color24bit[1] << " " << p.color24bit[2] << std::endl;
 			outstream.write(reinterpret_cast<char*>(pixeldata[(x_size * (row - 1)) + col].color24bit), std::ceil(bitdepth / 8));
 		}
 		//Add neccessary padding after each row

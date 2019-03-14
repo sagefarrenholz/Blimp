@@ -20,14 +20,19 @@ int BMP::fill(color incolor) {
 	return 0;
 }
 
-//Changes all pixels to one color
+//Changes all pixels in a row to one color
 int BMP::fillRow(int32_t row, color incolor) {
 	for (int32_t i = 0; i < x_size; i++)
 		pixeldata[(x_size * row) + i].changeColor(incolor, bitdepth);
 	return 0;
 }
 
-
+//Changes all pixels in a column to one color
+int BMP::fillCol(int32_t col, color incolor) {
+	for (int32_t i = 0; i < y_size; i++)
+		pixeldata[(x_size * i) + col].changeColor(incolor, bitdepth);
+	return 0;
+}
 
 //Set intensity of a row of pixels
 int BMP::setRowIntensity(int32_t row, double intensity) {
