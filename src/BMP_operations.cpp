@@ -35,26 +35,18 @@ int BMP::fillCol(int32_t col, color incolor) {
 }
 
 //Set intensity of a row of pixels
-int BMP::setRowIntensity(int32_t row, double intensity) {
+int BMP::setRowLightness(int32_t row, double lightness) {
 	for (int32_t i = 0; i < x_size; i++)
-		pixeldata[(x_size * row) + i].setLightness(intensity, bitdepth);
+		pixeldata[(x_size * row) + i].setLightness(lightness, bitdepth);
 	return 0;
 }
-
-//Paints a gradient from top to bottom
-//int BMP::gradientVertical(color top, color bottom) {
-//	for (uint32_t i = 0; i < y_size; i++) {
-//		fillRow(i, color)
-//
-//	}
-//}
 
 //---------- Image Operations ----------
 
 //Sets instensity of all pixels
-int BMP::setImageIntensity(double intensity) {
+int BMP::setImageLightness(double lightness) {
 	for (pixel& p : pixeldata)
-		p.setLightness(intensity, bitdepth);
+		p.setLightness(lightness, bitdepth);
 	return 0;
 }
 

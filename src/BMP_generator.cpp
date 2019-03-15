@@ -46,10 +46,14 @@ int BMP::generateBMP(void) {
 		0
 	};
 	outstream.write(reinterpret_cast<char*>(&header), sizeof(BMP_HEADER));
-	//std::cout << "DATA SIZE: " << x_size * y_size * std::ceil(bitdepth / 8) << std::endl;
 	//The amount of needed bytes to create a multiple of 4 byte row
 	if((x_size * bitdepth / 8) % 4)
 		padding = 4 - ((x_size * bitdepth / 8) % 4);
+
+	//Write the palette to the file if one exists
+	if (palettetoggle) {
+
+	}
 
 	//Iterate through each row starting from the bottom
 	for (size_t row = y_size; row; row--) {

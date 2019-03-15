@@ -255,6 +255,7 @@ class BMP {
 
 	//color24 palette for low bit depth images
 	std::vector<color24> palette {0};
+	bool palettetoggle = false;
 
 	//Output Directory
 	std::string outlocation = "myimage.bmp";
@@ -281,8 +282,14 @@ class BMP {
 		case 2:
 		case 4:
 		case 8:
+			palettetoggle = true;
+			//Success
+			bitdepth = bd;
+			return 0;
+			break;
 		case 16:
 		case 24:
+			palettetoggle = false;
 			//Success
 			bitdepth = bd;
 			return 0;
@@ -346,19 +353,13 @@ class BMP {
 	//Fill one col with a color
 	int fillCol(int32_t col, color);
 
-	//Fill one column with a color
-	//int fillColumn(int32_t col, color);
-
-	//Paints a gradient over the image, vertically.
-	//int gradientVertical(color top, color bottom);
-
 	//Sets intensity of all pixels
-	int setImageIntensity(double intensity);
+	int setImageLightness(double lightness);
 
 	int setImageSaturation(double saturation);
 
 	//Set intensity of a row of pixels
-	int setRowIntensity(int32_t row, double intensity);
+	int setRowLightness(int32_t row, double lightness);
 
 	//---------- Information ----------
 
@@ -398,10 +399,5 @@ class BMP {
 
 	//Generate the current image to the output directory
 	int generateBMP(void);
-
-private:
-
-	//Private inner-class funcitons
-
 
 };
