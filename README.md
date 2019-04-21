@@ -25,7 +25,7 @@ thebestpic.setOutputDirectory("thebestpic.bmp");
 ```
 Believe it or not, your image can already be generated.
 ```
-thebestpic.generateBMP();
+thebestpic.generate();
 ```
 If you want to add a little color create a color that matches your image bitdepth. BMPlib uses arrays of 1 byte integers to store color data. However, this is simplified for you with the built in types.
 ```
@@ -35,9 +35,9 @@ color24 blue24bit = { 0x00, 0x00, 0xFF};
 Fill the image with your new color!
 ```
 thebestpic.fill(red16bit);
-thebestpic.generateBMP();
+thebestpic.generate();
 ```
-Sometimes you need to change just once pixel. For this use changePixel():
+Sometimes you need to change just one pixel. For this use changePixel():
 ```
 thebestpic.changePixel(50, 50, red16bit);
 ```

@@ -254,17 +254,16 @@ class BMP {
 	std::vector<pixel> pixeldata = std::vector<pixel>(x_size*y_size);
 
 	//color24 palette for low bit depth images
-	std::vector<color24> palette {0};
-	bool palettetoggle = false;
+	std::vector<pixel> palette;
 
 	//Output Directory
-	std::string outlocation = "myimage.bmp";
+	std::string output = "myimage.bmp";
 
 	//Output Filestream
 	std::ofstream outstream;
 
 	//Padding amount 0-4
-	unsigned padding = 0;
+	uint8_t padding = 0;
 	//Byte used to pad rows
 	char padbyte = 0x00;
 
@@ -277,25 +276,25 @@ class BMP {
 
 	//Set Bitdepth
 	int setBitDepth(const unsigned& bd) {
+		pixel temppix;
+		color24 tempblack = { 0,0,0 };
+		temppix.changeColor(tempblack, 24);
 		switch (bd) {
 		case 1:
 		case 2:
 		case 4:
 		case 8:
-			palettetoggle = true;
-			//Success
+			palette.assign(std::pow(2, bd) , temppix);
 			bitdepth = bd;
 			return 0;
 			break;
 		case 16:
 		case 24:
-			palettetoggle = false;
-			//Success
+			palette.resize(0);
 			bitdepth = bd;
 			return 0;
 			break;
 		default:
-			//Failure
 			throw "Invalid Bitdepth";
 			return 1;
 		}
@@ -310,8 +309,8 @@ class BMP {
 	}
 
 	//Set the output directory for image generation
-	int setOutputDirectory(const std::string& inDir) {
-		outlocation = inDir;
+	int setOutput(const std::string& inDir) {
+		output = inDir;
 		return 0;
 	}
 
@@ -333,6 +332,13 @@ class BMP {
 	//Change the default padding byte, maybe for a secret message? :D
 	int setPadding(const unsigned char& c) {
 		padbyte = c;
+		return 0;
+	}
+
+	//Add a color to the palette
+	int setPaletteColor(uint8_t index, color24 incolor) {
+		palette[index].changeColor(incolor, 24);
+		return 0;
 	}
 
 	//---------- Pixel operations -----------
@@ -398,6 +404,6 @@ class BMP {
 	int copy(std::string& file);
 
 	//Generate the current image to the output directory
-	int generateBMP(void);
+	int generate(void);
 
 };
