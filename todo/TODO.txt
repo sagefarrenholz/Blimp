@@ -1,0 +1,17 @@
+TODO
+working on:
+improving palette and low bitdepth support (padding)
+
+to work on:
+-important-
+importing other bmp images
+improve pixel memory use
+improve low bitdepth interaction
+clean up files (comments,etc)
+
+-backlog-
+vertical gradient
+horizontal gradient
+
+done:
+add column fill
