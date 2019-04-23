@@ -1,4 +1,4 @@
-![Mandelbrot](https://i.ibb.co/3WrSyTH/mandelbrot.png)
+![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
 
 # BMPlib
 A simple C++ library that allows for the generation and manipulation of Bitmap images. Support for several bitdepths.
