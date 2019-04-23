@@ -1,5 +1,5 @@
 # BMPlib
-A simple C++ library that allows for the generation and manipulation of Bitmap images. Support for several bitdepths.
+A lightweight C++ library that allows for the generation and manipulation of Bitmap images. Support for several bitdepths.
 
 ![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
 
@@ -39,7 +39,7 @@ Fill the image with your new color!
 thebestpic.fill(red16bit);
 thebestpic.generate();
 ```
-Sometimes you need to change just one pixel. For this use changePixel():
+Sometimes you need to change just one pixel. For this use setPixel():
 ```
 thebestpic.setPixel(50, 50, red16bit);
 ```

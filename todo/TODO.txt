@@ -15,3 +15,4 @@ horizontal gradient
 
 done:
 add column fill
+added sample code (mandelbrot)
