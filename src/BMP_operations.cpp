@@ -2,13 +2,13 @@
 #include "BMPlib.h"
 
 //Change one pixel by index
-int BMP::changePixel(size_t px, color incolor) {
+int BMP::setPixel(size_t px, color incolor) {
 	pixeldata[px].changeColor(incolor, bitdepth);
 	return 0;
 }
 
 //Change one pixel by coordinate
-int BMP::changePixel(int32_t x, int32_t y, color incolor) {
+int BMP::setPixel(int32_t x, int32_t y, color incolor) {
 	pixeldata[(x_size * (y - 1)) + (x - 1)].changeColor(incolor, bitdepth);
 	return 0;
 }

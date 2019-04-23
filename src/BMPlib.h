@@ -346,9 +346,9 @@ class BMP {
 
 	//Change one pixel
 	//By coordinate
-	int changePixel(int32_t x, int32_t y, color);
+	int setPixel(int32_t x, int32_t y, color);
 	//By index
-	int changePixel(size_t index, color);
+	int setPixel(size_t index, color);
 
 	//Fill the image with one color
 	int fill(color);
