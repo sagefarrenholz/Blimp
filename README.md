@@ -1,7 +1,7 @@
-![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
-
 # BMPlib
 A simple C++ library that allows for the generation and manipulation of Bitmap images. Support for several bitdepths.
+
+![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
 
 ## Features
 - BMP image generation at all BMP supported bitdepths: 1, 2, 4, 8, 16, 24.
@@ -23,7 +23,7 @@ Setup your image attributes. By default a new BMP image is 64x64, has a bitdepth
 ```
 thebestpic.setDimensions(512, 512);          
 thebestpic.setBitdepth(16);                        
-thebestpic.setOutputDirectory("thebestpic.bmp");  
+thebestpic.setOutput("thebestpic.bmp");  
 ```
 Believe it or not, your image can already be generated.
 ```
@@ -41,7 +41,7 @@ thebestpic.generate();
 ```
 Sometimes you need to change just one pixel. For this use changePixel():
 ```
-thebestpic.changePixel(50, 50, red16bit);
+thebestpic.setPixel(50, 50, red16bit);
 ```
 If you want more control over the pixel, for instance, to change its lightness, use getPixel():
 ```
