@@ -1,6 +1,8 @@
 #pragma once
+
 #include "BMPlib.h"
 
+/* 
 int BMP::copy(std::string& file) {
 	std::ifstream i(file);
 	//i.see
@@ -8,8 +10,9 @@ int BMP::copy(std::string& file) {
 	i.close();
 	return 0;
 }
+*/
 
-int BMP::generate(void) {
+void BMP::generate(const std::string& filename) {
 	/*
 	--
 	--		BMP files are row reversed vertically meaning that the bottom is the top row in 
@@ -23,7 +26,7 @@ int BMP::generate(void) {
 	*/
 
 	//Open file stream at output directory in binary mode
-	outstream.open(output, std::ios::binary);
+	std::ofstream ofs{filename.c_str(), std::ios::binary};
 
 	std::cout << "Generating..." << std::endl;
 
