@@ -19,23 +19,23 @@
 struct BMP_Header {
 
 	//File Header Structure
-	const char id[2];
-	const uint32_t size;
-	const uint32_t reserved;
-	const uint32_t offset;
+	char id[2] = {'B', 'M'};
+	uint32_t size;
+	uint32_t reserved = 0;
+	uint32_t offset;
 
 	//DIB Header Structure
-	const uint32_t headersize;
-	const int32_t width;
-	const int32_t height;
-	const uint16_t colorplanes;
-	const uint16_t bitdepth;
-	const uint32_t compress;
-	const uint32_t imagesize;
-	const int32_t xres;
-	const int32_t yres;
-	const uint32_t colorcount;
-	const uint32_t importantcolors;
+	uint32_t header_size = 40;
+	int32_t width;
+	int32_t height;
+	uint16_t color_planes = 1;
+	uint16_t bit_depth;
+	uint32_t compress;
+	uint32_t image_size = 0;
+	int32_t x_res;
+	int32_t y_res;
+	uint32_t color_count = 0;
+	uint32_t important_colors = 0;
 
 };
 #pragma pack(pop)
