@@ -1,17 +1,16 @@
-# BMPlib
-A lightweight C++ library that allows for the generation and manipulation of Bitmap images. Support for several bitdepths.
-
-![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
+# libBMP
+A lightweight C++ library that allows for the generation and manipulation of Bitmap images. Supports modern and low bit depths.
 
 ## Features
-- BMP image generation at all BMP supported bitdepths: 1, 2, 4, 8, 16, 24.
-- Simple image operations like: altering the image pixel by pixel, fill the image or by row or by column.
+- BMP image generation at all BMP supported bitdepths: 1, 2, 4, 8, 16, 24, and 32;
+- Fast in-memory manipulation of images with lightweight getter and setter wrappers for pixels.
+- A primitve but powerful interface that stays out of your way.
 
 ## Dependencies
-None.
+Just the C standard library, C math library, and C++ standard library.
 
 ## Installing
-Compile the library using any C++ compiler. Include BMPlib.h in your include directory. Link against the library. Add #include "BMPlib.h" to your code.
+Compile the library using any C++ compiler. Include libBMP.h in your include directory. Link against the library. Add #include "libBMP.h" to your code.
 Easy as that.
 
 ## Getting Started
@@ -19,32 +18,36 @@ Intialize your image as a BMP object.
 ```
 BMP thebestpic;
 ```
-Setup your image attributes. By default a new BMP image is 64x64, has a bitdepth of 24, and outputs in the same directory as your executable with the name "myimage.bmp".
+Setup your image attributes. By default a new BMP image is 64 x 64 and has a bitdepth of 24.
 ```
-thebestpic.setDimensions(512, 512);          
-thebestpic.setBitdepth(16);                        
-thebestpic.setOutput("thebestpic.bmp");  
+thebestpic.set_bit_depth(24);
+thebestpic.set_size(512, 512);          
 ```
 Believe it or not, your image can already be generated.
 ```
-thebestpic.generate();
+thebestpic.generate("thebestpic.bmp");
 ```
-If you want to add a little color create a color that matches your image bitdepth. BMPlib uses arrays of 1 byte integers to store color data. However, this is simplified for you with the built in types.
+libBMP uses 32bit integers for color but provides a simple typedef wrapper: "color". libBMP handles aliasing of bits, so worry not about using higher bit depth colors at low bit depths.
 ```
-color16 red16bit = { 0b11111000, 0b00000000 };
-color24 blue24bit = { 0x00, 0x00, 0xFF};
+color red24bit = 0xFF0000;
+color blue16bit = 0x001F;
 ```
 Fill the image with your new color!
 ```
-thebestpic.fill(red16bit);
-thebestpic.generate();
+thebestpic.fill(red24bit);
+thebestpic.generate("thebestpic.bmp");
 ```
-Sometimes you need to change just one pixel. For this use setPixel():
+Sometimes you need to change just one pixel. For this use set_pixel():
 ```
-thebestpic.setPixel(50, 50, red16bit);
+thebestpic.set_pixel(50, 50, red16bit);
 ```
-If you want more control over the pixel, for instance, to change its lightness, use getPixel():
+If you want to see the color of just one pixel, use get_pixel():
 ```
-thebestpic.getPixel(50,50).setLightness(1.0);
+thebestpic.get_pixel(50, 50);
 ```
-There are other ways to change your image. Please check the docs for more.
+You can also get and set pixels by index (starting at 0), if you are into that kinda thing:
+```
+thebestpic.set_pixel(20, red24bit);
+thebestpic.get_pixel(100);
+
+![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)

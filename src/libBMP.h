@@ -73,9 +73,9 @@ class BMP {
 	void set_size(const int32_t& width, const int32_t& height) {
 		header.width = width;
 		header.height = height;
-		//data.resize(width * height);
 		//Calculates image data width including padding
 		calc_raw_width();
+		free(data);
 		data = (uint8_t*) malloc(raw_width * height);
 	}
 
@@ -94,6 +94,8 @@ class BMP {
 	
 	//Functions are defined in the BMP_operations.cpp file
 
+	//FIXME add bounds checking?
+	
 	//By coordinate, indexed at (1,1)
 	void set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color);
 	//By index, indexed at 0
@@ -165,14 +167,14 @@ class BMP {
 		free(data);
 	}
 
-	static constexpr uint64_t pow_2(const unsigned& n) { return 1 << n; }
 	private:
+	
+	//--------------- Internal Tools ---------------
+	
+	static constexpr uint64_t pow_2(const unsigned& n) { return 1 << n; }
 	
 	//Actual size in bytes of one row
 	unsigned raw_width = 0;
-
-	//--------------- Internal Tools ---------------
-	
 
 	//Calculates the raw_width variable
 	void calc_raw_width();
@@ -180,6 +182,7 @@ class BMP {
 	//Returns a pointer to a row in the raw data
 	uint8_t* get_row(const uint32_t& i) const;
 
+	//Returns a pointer to byte containing the given pixel
 	uint8_t* get_pixel_ptr(const size_t& i) const;
 };
 

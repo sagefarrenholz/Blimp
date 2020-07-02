@@ -4,7 +4,7 @@
  -
  */
 
-#include "BMPlib.h"
+#include "libBMP.h"
 
 #include <fstream>
 #include <iostream>
@@ -74,16 +74,6 @@ void BMP::generate(const std::string& filename) {
 	
 	std::cout << "Done." << std::endl;
 }
-
-void BMP::fill(const uint32_t& color){
-	for (int64_t i = 0; i < get_size(); i++){
-		set_pixel(i, color);
-	}
-}
-
-//void BMP::fill_row(const int32_t& row, const uint32_t& color){
-
-//}
 
 void BMP::calc_raw_width() {
 	// Size of actual row in bytes with padding
@@ -156,3 +146,14 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 void BMP::set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color) {
 	set_pixel(x + y * get_width(), color);
 }
+
+void BMP::fill(const uint32_t& color){
+	for (int64_t i = 0; i < get_size(); i++){
+		set_pixel(i, color);
+	}
+}
+
+//void BMP::fill_row(const int32_t& row, const uint32_t& color){
+
+//}
+
