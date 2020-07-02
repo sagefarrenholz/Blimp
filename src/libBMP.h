@@ -13,6 +13,8 @@
 
 #include "BMP_header.h"
 
+using color = uint32_t;
+
 class BMP {
 
 	/*
@@ -39,7 +41,7 @@ class BMP {
 	BMP_Header header; 
 
 	//Vector containing all of the image's pixels
-	uint8_t* data;
+	uint8_t* data = NULL;
 
 	//32bit palette, required for images <= 8 bit depth
 	std::vector<uint32_t> palette;
@@ -75,7 +77,7 @@ class BMP {
 		header.height = height;
 		//Calculates image data width including padding
 		calc_raw_width();
-		free(data);
+		if (data) free(data);
 		data = (uint8_t*) malloc(raw_width * height);
 	}
 
@@ -134,12 +136,10 @@ class BMP {
 	//FIXME add bounds checking?
 
 	//Returns a pixel by index, indexed at 0
-	uint32_t get_pixel(const size_t& index) /* const*/;
+	uint32_t get_pixel(const size_t& index) const;
 
 	//Returns a pixel by coordinate, index begins at given arguement 
-	/* /uint32_t get_pixel(const int32_t& x, const int32_t& y, const int32_t& index = 1) const {
-		return data[(get_width() * (y - index)) + (x - index)];
-	}*/
+	uint32_t get_pixel(const int32_t& x, const int32_t& y, const int32_t& index = 1) const; 
 
 	unsigned get_raw_width() { return raw_width; };
 

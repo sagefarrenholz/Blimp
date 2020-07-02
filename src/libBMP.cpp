@@ -25,11 +25,11 @@ void BMP::generate(const std::string& filename) {
 	 -
 	 -		BMP files are row reversed vertically meaning that the bottom is the top row in 
 	 -	the actual data. Not only this but, padding bytes must be added to maintain a row 
-	 -	width that is a multiple of 4 bytes. In BMPlib, the pixel data is exposed primitively. The
+	 -	width that is a multiple of 4 bytes. In libBMP, the pixel data is exposed primitively. The
 	 -	generation step must compensate for this: all data must be correctly formatted. 
 	 -
 	 -		Following the BMP file structure spec the file must also possess a file header.
-	 -	The header is defined in the BMPlib.h header file. 
+	 -	The header is defined in the libBMP.h header file. 
 	 -
 	 */
 
@@ -97,7 +97,7 @@ uint8_t* BMP::get_pixel_ptr(const size_t& i) const {
 }
 
 // Returns the color value of a pixel
-uint32_t BMP::get_pixel(const size_t& i) {
+uint32_t BMP::get_pixel(const size_t& i) const {
 	uint8_t bd = get_bit_depth();
 	uint32_t color;
 	const uint8_t* ptr = get_pixel_ptr(i);
@@ -110,7 +110,7 @@ uint32_t BMP::get_pixel(const size_t& i) {
 	} else {
 	// If bitdepth < 8 some bit shifting magic is required to retrieve the color
 		uint8_t bit_offset = i % get_width() % (8 / bd);
-		return (uint32_t)(*ptr >> bd * bit_offset & (pow_2(bd) - 1));	
+		return (uint32_t)(*ptr >> (7 - bd * bit_offset) & (pow_2(bd) - 1));	
 	}
 	return color;
 }
@@ -135,10 +135,12 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 		// Bit mask
 		uint8_t mask = (pow_2(bd) - 1);
 		// Applies a hole to the byte where data will be places
-		uint8_t ptr_hole = *ptr & ~(mask << (bit_offset * bd));
+		uint8_t ptr_hole = *ptr & ~(mask << (7 - bit_offset * bd));
 		// Masked and shifted data, mask just in-case given data is larger
-		uint8_t m_data = ((uint8_t)color & mask) << (bd * bit_offset); 
+		uint8_t m_data = ((uint8_t)color & mask) << (7 - bd * bit_offset); 
 		// Fill hole with masked and shifted data
+		if (bit_offset == 1)
+		std::cout << "m_data " << unsigned(m_data) << std::endl;
 		*ptr = ptr_hole | m_data;	
 	}
 }
