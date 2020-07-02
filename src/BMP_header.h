@@ -32,8 +32,8 @@ struct BMP_Header {
 	uint16_t bit_depth;
 	uint32_t compress;
 	uint32_t image_size = 0;
-	int32_t x_res;
-	int32_t y_res;
+	int32_t x_res = 2835;
+	int32_t y_res = 2835;
 	uint32_t color_count = 0;
 	uint32_t important_colors = 0;
 

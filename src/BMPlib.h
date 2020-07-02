@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <cmath>
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <cmath>
 
 #include "BMP_header.h"
 
@@ -35,18 +35,12 @@ class BMP {
 
 	//---------------- Image Data ---------------
 	
-	//Header required for generation
+	//Header required for generation, contains size and header
 	BMP_Header header; 
-
-	//Bit depth of the image
-	uint8_t bd;
-
-	//Dimensions of the image
-	int32_t width;
-	int32_t height;
 
 	//Vector containing all of the image's pixels
 	std::vector<uint32_t> data;
+	uint8_t* data1;
 
 	//32bit palette, required for images <= 8 bit depth
 	std::vector<uint32_t> palette;
@@ -56,41 +50,45 @@ class BMP {
 	//--------------- Image attribute operations ---------------
 
 	//Set Bitdepth
-	int set_bit_depth(const unsigned& bd) {
-		switch (bd) {
+	void set_bit_depth(const uint16_t& bit_depth) {
+		switch (bit_depth) {
 			case 1:
 			case 2:
 			case 4:
 			case 8:
-				palette.assign(pow_2(bd), 0);
-				bitdepth = bd;
-				return 0;
+				palette.assign(pow_2(bit_depth), 0);
+				header.bit_depth = bit_depth;
 				break;
 			case 16:
 			case 24:
 			case 32:
 				palette.resize(0);
-				bitdepth = bd;
-				return 0;
+				header.bit_depth = bit_depth;
 				break;
 			default:
 				throw "Invalid Bitdepth";
-				return 1;
 		}
 	}
 
 	//Set Size
 	void set_size(const int32_t& width, const int32_t& height) {
-		this->width = width;
-		this->height = height;
-		pixeldata.resize(x*y);
-		return 0;
+		header.width = width;
+		header.height = height;
+		//data.resize(width * height);
+		//Calculates image data width including padding
+		calc_raw_width();
+		data1 = (uint8_t*) malloc(raw_width * height);
 	}
 
 	//Add a color to the palette
-	int set_palette(uint8_t index, uint32_t color) {
-		palette[index].changeColor(incolor, 24);
-		return 0;
+	void set_palette(uint8_t index, uint32_t color) {
+		palette[index] = color;
+	}
+
+	//Sets the resolution of the image, in pixels per meter.
+	void set_resolution(int32_t x_res, int32_t y_res) {
+		header.x_res = x_res;
+		header.y_res = y_res;
 	}
 
 	//---------- Pixel operations -----------
@@ -98,48 +96,49 @@ class BMP {
 	//Functions are defined in the BMP_operations.cpp file
 
 	//By coordinate, indexed at (1,1)
-	uint32_t set_pixel(int32_t x, int32_t y, color);
+	void set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color);
 	//By index, indexed at 0
-	uint32_t set_pixel(size_t index, color);
+	void set_pixel(const size_t& index, const uint32_t& color);
 
 	//Fill the image with one color
-	int fill(color);
+	void fill(const uint32_t& color);
 
 	//Fill one row with a color
-	int fill_row(int32_t row, color);
+	void fill_row(const int32_t& row, const uint32_t& color);
 
 	//Fill one col with a color
-	int fill_col(int32_t col, color);
+	void fill_col(const int32_t& col, const uint32_t& color);
 
-	//Sets intensity of all pixels
-	int set_lightness(double lightness);
-
-	int set_saturation(double saturation);
-
-	//Set intensity of a row of pixels
-	//int set_lightness(int32_t row, double lightness);
+	//Fill rect with a color
+	void fill_rect(const int32_t& x, const int32_t& y, const int32_t& width, const int32_t& height, const uint32_t& color); 
 
 	//---------- Information ----------
 
-	unsigned get_bit_depth() const{	return bd; }
+	uint16_t get_bit_depth() const{ return header.bit_depth; }
 
-	int32_t get_width() const{ return width; }
+	int32_t get_width() const{ return header.width; }
 
-	int32_t get_height() const{ return height; }
+	int32_t get_height() const{ return header.height; }
 
-	long get_size() const{ return width * height; }
+	long get_size() const{ return header.width * header.height; }
+
+	int32_t get_x_res() const { return header.x_res; }
+
+	int32_t get_y_res() const { return header.y_res; }
 
 	//FIXME add bounds checking?
 
 	//Returns a pixel by index, indexed at 0
-	uint32_t get_pixel(const size_t& index) const{ return data[index]; }
+	uint32_t get_pixel(const size_t& index) /* const*/;
 
 	//Returns a pixel by coordinate, index begins at given arguement 
-	uint32_t get_pixel(const int32_t& x, const int32_t& y, const int32_t& index = 1) const {
-		return pixeldata[(width * (y - index)) + (x - index)];
-	}
+	/* /uint32_t get_pixel(const int32_t& x, const int32_t& y, const int32_t& index = 1) const {
+		return data[(get_width() * (y - index)) + (x - index)];
+	}*/
 
-	//---------- I/O ----------
+	unsigned get_raw_width() { return raw_width; };
+
+	//--------------- I/O ---------------
 
 	//Copy from another image
 	void copy(const std::string& file);
@@ -149,19 +148,35 @@ class BMP {
 	
 	//--------------- Constructors ----------------
 	
-	BMP(int32_t width = 64, int32_t height = 64, uint8_t bitdepth = 24) {
+	BMP(int32_t width = 64, int32_t height = 64, uint16_t bitdepth = 24) {
+		set_bit_depth(bitdepth);	
 		set_size(width, height);
-		set_bitdepth(bitdepth);	
 	};
 
 	BMP(const std::string& filename) {
 		copy(filename);
 	};	
 		
+	//--------------- Destructor ---------------
+	~BMP() {
+		free(data1);
+	}
+
+	static constexpr uint64_t pow_2(const unsigned& n) { return 1 << n; }
 	private:
+	
+	//Actual size in bytes of one row
+	unsigned raw_width = 0;
 
 	//--------------- Internal Tools ---------------
 	
-	static constexpr pow_2(const unsigned& n) { return 1 << n; }
+
+	//Calculates the raw_width variable
+	void calc_raw_width();
+
+	//Returns a pointer to a row in the raw data
+	uint8_t* get_row(const uint32_t& i) const;
+
+	uint8_t* get_pixel_ptr(const size_t& i) const;
 };
 
