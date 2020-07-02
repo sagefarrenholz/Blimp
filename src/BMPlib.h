@@ -39,8 +39,7 @@ class BMP {
 	BMP_Header header; 
 
 	//Vector containing all of the image's pixels
-	std::vector<uint32_t> data;
-	uint8_t* data1;
+	uint8_t* data;
 
 	//32bit palette, required for images <= 8 bit depth
 	std::vector<uint32_t> palette;
@@ -77,7 +76,7 @@ class BMP {
 		//data.resize(width * height);
 		//Calculates image data width including padding
 		calc_raw_width();
-		data1 = (uint8_t*) malloc(raw_width * height);
+		data = (uint8_t*) malloc(raw_width * height);
 	}
 
 	//Add a color to the palette
@@ -99,6 +98,8 @@ class BMP {
 	void set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color);
 	//By index, indexed at 0
 	void set_pixel(const size_t& index, const uint32_t& color);
+
+	void set_palette(const int& i, const uint32_t& color) { palette[i] = color; }
 
 	//Fill the image with one color
 	void fill(const uint32_t& color);
@@ -125,6 +126,8 @@ class BMP {
 	int32_t get_x_res() const { return header.x_res; }
 
 	int32_t get_y_res() const { return header.y_res; }
+
+	std::vector<uint32_t>& get_palette() { return palette; }
 
 	//FIXME add bounds checking?
 
@@ -159,7 +162,7 @@ class BMP {
 		
 	//--------------- Destructor ---------------
 	~BMP() {
-		free(data1);
+		free(data);
 	}
 
 	static constexpr uint64_t pow_2(const unsigned& n) { return 1 << n; }

@@ -61,15 +61,14 @@ void BMP::generate(const std::string& filename) {
 	//Write the palette to the file if one exists
 	for (unsigned i = 0; i < palette.size(); i++) {
 		//Palette colors are in the order BGR
-		ofs.write(reinterpret_cast<char*>(palette[i]), 4);
+		ofs.write(reinterpret_cast<char*>(&palette[i]), 4);
 	}
-
 	std::cout << "Writing " << (height * raw_width)/1000.0 << "kB of image data." << std::endl;
 	std::cout << "Total file size " << (header.size)/1000.0 << "kB." << std::endl;
 
 	// Write image data from, rows vertically flipped
 	for (int32_t r = get_height() - 1; r >= 0; r--)
-		ofs.write(reinterpret_cast<char*>(data1 + r * raw_width), raw_width);
+		ofs.write(reinterpret_cast<char*>(data + r * raw_width), raw_width);
 
 	ofs.close();
 	
@@ -82,6 +81,10 @@ void BMP::fill(const uint32_t& color){
 	}
 }
 
+//void BMP::fill_row(const int32_t& row, const uint32_t& color){
+
+//}
+
 void BMP::calc_raw_width() {
 	// Size of actual row in bytes with padding
 	raw_width = (unsigned)(std::ceil(get_bit_depth() * get_width() / 32.0)) * 4; 
@@ -89,7 +92,7 @@ void BMP::calc_raw_width() {
 
 uint8_t* BMP::get_row(const uint32_t& r) const {
 	// Returns a pointer to the beginning of row 'r' of the image
-	return data1 + raw_width * r;
+	return data + raw_width * r;
 }
 
 // Returns a pointer to the byte containing the pixel

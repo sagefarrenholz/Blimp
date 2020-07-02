@@ -10,7 +10,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Sage Farrenholz, 
+ *         Author:  Sage Farrenholz 
  *
  * =====================================================================================
  */
@@ -30,10 +30,10 @@ struct BMP_Header {
 	int32_t height;
 	uint16_t color_planes = 1;
 	uint16_t bit_depth;
-	uint32_t compress;
+	uint32_t compress = 0;
 	uint32_t image_size = 0;
-	int32_t x_res = 2835;
-	int32_t y_res = 2835;
+	int32_t x_res = 2835; //72dpi ~= 2835 ppm
+	int32_t y_res = 2835; //72dpi ~= 2835 ppm
 	uint32_t color_count = 0;
 	uint32_t important_colors = 0;
 
