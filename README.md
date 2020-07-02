@@ -49,5 +49,5 @@ You can also get and set pixels by index (starting at 0), if you are into that k
 ```
 thebestpic.set_pixel(20, red24bit);
 thebestpic.get_pixel(100);
-
+```
 ![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
