@@ -1,5 +1,7 @@
 //Change this to your include directory.
-#include "inc/BMPlib.h"
+#include "../src/libBMP.h"
+
+#include <iostream>
 
 int main(void)
 {
@@ -25,15 +27,14 @@ int main(void)
 	const double yres = 2.0 / height;	
 
 	long double xo, yo, temp, x = 0, y = 0;
-        float test = 0;
+       	long double test = 0;
 
-	BMP mandelbrot;
-	mandelbrot.setDimensions(width,height);
-	mandelbrot.setOutput("mandelbrot.bmp");
+	BMP mandelbrot(width, height);
+	//mandelbrot.set_size(width,height);
 
 	//Here is the starting gradient color.
-	color24 border = {0x00,0x00,0x00};
-	color24 black = {0};
+	uint32_t border = 0; 
+	uint32_t black = 0;
 	
 	mandelbrot.fill(black);
 
@@ -70,16 +71,19 @@ int main(void)
 				test++;	
 			}
 			if (test != depth) { 
-				border[0] = static_cast<uint8_t>(test * (0xFFp1 / depth));
-				mandelbrot.setPixel(itx + 1, ity + 1, border);	
-			} else 
-				mandelbrot.setPixel(itx + 1, ity + 1, black);
+				border = static_cast<uint8_t>(test * (0xFFp1 / depth));
+				if (itx + 1 >= width || ity + 1 >= height) continue; 
+				mandelbrot.set_pixel(itx + 1, ity + 1, border);	
+			} else { 
+				if (itx + 1 >= width || ity + 1 >= height) continue; 
+				mandelbrot.set_pixel(itx + 1, ity + 1, black);
+			}
 			test = 0;
 			x = 0;
 			y = 0;
 		}	
 	}
 
-	mandelbrot.generate();
+	mandelbrot.generate("mandelbrot.bmp");
 	return 0;
 }

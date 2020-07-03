@@ -1,23 +1,23 @@
-libBMP.a: BMPlib.o
+libBMP.a: libBMP.o
 	mkdir -p bin
-	ar rcs bin/libBMP.a BMPlib.o
+	ar rcs bin/libBMP.a libBMP.o
 	rm -f samples/libBMP.a
 	cp bin/libBMP.a samples/
-	rm BMPlib.o
+	rm libBMP.o
 
-debug: BMPlibd.o
+debug: libBMPd.o
 	mkdir -p bin
-	ar rcs bin/libBMPd.a BMPlibd.o
+	ar rcs bin/libBMPd.a libBMPd.o
 	rm -f samples/libBMPd.a
 	cp bin/libBMPd.a samples/
-	rm BMPlibd.o
+	rm libBMPd.o
 
 BMP_operations.o: src/BMP_operations.cpp
 	g++ -c -o BMP_operations.o src/BMP_operations.cpp
 
-BMPlib.o: src/BMPlib.cpp
-	g++ -c -o BMPlib.o src/BMPlib.cpp
+libBMP.o: src/libBMP.cpp
+	g++ -c -o libBMP.o src/libBMP.cpp
 
-BMPlibd.o: src/BMPlib.cpp
-	g++ -g1 -c -o BMPlibd.o src/BMPlib.cpp
+libBMPd.o: src/libBMP.cpp
+	g++ -g1 -c -o libBMPd.o src/libBMP.cpp
 
