@@ -81,11 +81,6 @@ class BMP {
 		data = (uint8_t*) malloc(raw_width * height);
 	}
 
-	//Add a color to the palette
-	void set_palette(uint8_t index, uint32_t color) {
-		palette[index] = color;
-	}
-
 	//Sets the resolution of the image, in pixels per meter.
 	void set_resolution(int32_t x_res, int32_t y_res) {
 		header.x_res = x_res;
@@ -99,23 +94,23 @@ class BMP {
 	//FIXME add bounds checking?
 	
 	//By coordinate, indexed at (1,1)
-	void set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color);
+	void set_pixel(const int32_t& x, const int32_t& y, const color&);
 	//By index, indexed at 0
-	void set_pixel(const size_t& index, const uint32_t& color);
+	void set_pixel(const size_t& index, const color& );
 
-	void set_palette(const int& i, const uint32_t& color) { palette[i] = color; }
+	void set_palette(const int& i, const color&); 
 
 	//Fill the image with one color
 	void fill(const uint32_t& color);
 
 	//Fill one row with a color
-	void fill_row(const int32_t& row, const uint32_t& color);
+	void fill_row(const int32_t& row, const color&);
 
 	//Fill one col with a color
-	void fill_col(const int32_t& col, const uint32_t& color);
+	void fill_col(const int32_t& col, const color&);
 
 	//Fill rect with a color
-	void fill_rect(const int32_t& x, const int32_t& y, const int32_t& width, const int32_t& height, const uint32_t& color); 
+	void fill_rect(const int32_t& x, const int32_t& y, const int32_t& width, const int32_t& height, const color&); 
 
 	//---------- Information ----------
 

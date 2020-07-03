@@ -140,7 +140,6 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 		uint8_t m_data = ((uint8_t)color & mask) << (7 - bd * bit_offset); 
 		// Fill hole with masked and shifted data
 		if (bit_offset == 1)
-		std::cout << "m_data " << unsigned(m_data) << std::endl;
 		*ptr = ptr_hole | m_data;	
 	}
 }
@@ -149,13 +148,30 @@ void BMP::set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color) {
 	set_pixel(x + y * get_width(), color);
 }
 
+void BMP::set_palette(const int& i, const uint32_t& color){
+	palette[i] = color;
+}
+
 void BMP::fill(const uint32_t& color){
 	for (int64_t i = 0; i < get_size(); i++){
 		set_pixel(i, color);
 	}
 }
 
-//void BMP::fill_row(const int32_t& row, const uint32_t& color){
+void BMP::fill_row(const int32_t& row, const uint32_t& color){
+	for(int col = 0; col < get_width(); col++){
+		set_pixel(col, row, color);
+	}
+}
 
-//}
+void BMP::fill_col(const int32_t& col, const uint32_t& color){
+	for (int row = 0; row < get_height(); row++){
+		set_pixel(col, row, color);
+	}
+}
 
+void BMP::fill_rect(const int32_t& x, const int32_t& y, const int32_t& width, const int32_t& height, const uint32_t& color){
+	//for (row ) {
+	
+	//}
+}
