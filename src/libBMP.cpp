@@ -139,7 +139,6 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 		// Masked and shifted data, mask just in-case given data is larger
 		uint8_t m_data = ((uint8_t)color & mask) << (7 - bd * bit_offset); 
 		// Fill hole with masked and shifted data
-		if (bit_offset == 1)
 		*ptr = ptr_hole | m_data;	
 	}
 }
@@ -171,7 +170,9 @@ void BMP::fill_col(const int32_t& col, const uint32_t& color){
 }
 
 void BMP::fill_rect(const int32_t& x, const int32_t& y, const int32_t& width, const int32_t& height, const uint32_t& color){
-	//for (row ) {
-	
-	//}
+	for (int row = 0; row < height; row++) {
+		for (int col = 0; col < width; col++){
+			set_pixel(col + x, row + y, color);
+		}
+	}
 }
