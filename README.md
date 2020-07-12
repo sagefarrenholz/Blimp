@@ -10,44 +10,53 @@ A lightweight C++ library that allows for the generation and manipulation of Bit
 Just the C standard library, C math library, and C++ standard library.
 
 ## Installing
-Compile the library using any C++ compiler. Include libBMP.h in your include directory. Link against the library. Add #include "libBMP.h" to your code.
-Easy as that.
+1. Run `make` in the root directory of  the project. This creates the static library in the bin directory.
+2. Include libBMP.h.
+3. Link against libBMP.a.
 
 ## Getting Started
-Intialize your image as a BMP object. 
+Intialize your image. By default a new BMP image is 64 x 64 and has a bit depth of 24.
 ```
-BMP thebestpic;
+BMP image;
 ```
-Setup your image attributes. By default a new BMP image is 64 x 64 and has a bitdepth of 24.
+Optionally, provide contructor arguments to set the size and bit depth.
 ```
-thebestpic.set_bit_depth(24);
-thebestpic.set_size(512, 512);          
+BMP image(512, 512); // 24 bit depth
+BMP image2(300, 200, 16); // 16 bit depth
 ```
-Believe it or not, your image can already be generated.
+You can create a BMP object from an existing BMP image with either a constructor overload or the `copy(string filename)` function.
 ```
-thebestpic.generate("thebestpic.bmp");
+BMP image3("../greatpicture.bmp");
+image2.copy("someimage.bmp");
 ```
-libBMP uses 32bit integers for color but provides a simple typedef wrapper: "color". libBMP handles aliasing of bits, so worry not about using higher bit depth colors at low bit depths.
+Resize or change the bit depth with the following functions: 
 ```
-color red24bit = 0xFF0000;
-color blue16bit = 0x001F;
+image.set_bit_depth(24);
+image.set_size(512, 512);          
+```
+Generate your image with `generate(string filename)`.
+```
+image.generate("thebestpic.bmp");
+```
+libBMP uses 32-bit integers for color but provides a simple alias for readability: `color`. 
+```
+color red_24bit = 0xFF0000;
+color blue_16bit = 0x001F;
 ```
 Fill the image with your new color!
 ```
-thebestpic.fill(red24bit);
-thebestpic.generate("thebestpic.bmp");
+image.fill(red_24bit);
 ```
-Sometimes you need to change just one pixel. For this use set_pixel():
+Sometimes you need to change just one pixel. Use `set_pixel(int x, int y, color c)`.
 ```
-thebestpic.set_pixel(50, 50, red16bit);
+image.set_pixel(50, 50, red_24bit);
 ```
-If you want to see the color of just one pixel, use get_pixel():
+If you want to get the color of one pixel, use `color get_pixel(int x, int y)`.
 ```
-thebestpic.get_pixel(50, 50);
+image.get_pixel(50, 50);
 ```
 You can also get and set pixels by index (starting at 0), if you are into that kinda thing:
 ```
-thebestpic.set_pixel(20, red24bit);
-thebestpic.get_pixel(100);
+image.set_pixel(20, red_24bit);
 ```
 ![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
