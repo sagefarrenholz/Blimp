@@ -95,7 +95,7 @@ class BMP {
 
 	//FIXME add bounds checking?
 	
-	//By coordinate, indexed at (1,1)
+	//By coordinate, indexed at (0, 0)
 	void set_pixel(const int32_t& x, const int32_t& y, const color&);
 	//By index, indexed at 0
 	void set_pixel(const size_t& index, const color& );
@@ -136,7 +136,7 @@ class BMP {
 	color get_pixel(const size_t& index) const;
 
 	//Returns a pixel by coordinate, index begins at given arguement 
-	color get_pixel(const int32_t& x, const int32_t& y, const int32_t& index = 1) const; 
+	color get_pixel(const int32_t& x, const int32_t& y) const; 
 	
 	//Returns a palette color 
 	color get_palette(const uint8_t& index) const;

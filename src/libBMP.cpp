@@ -37,7 +37,7 @@ void BMP::copy(const std::string& file) {
 	// Read into palette
 	ifs.read(reinterpret_cast<char*>(palette), pal_size());
 
-	// Read image data, bottom to top	
+	// Read image dat, row reversed	
 	for (int32_t r = get_height() - 1; r >= 0; r--)
 		ifs.read(reinterpret_cast<char*>(get_row(r)), raw_width);
 
@@ -155,9 +155,18 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 		// Zero out unusued bytes
 		if (bd != 32) {
 			uint32_t mask = (pow_2(bd) - 1);
-			// Creates a hole 
-			*ptr_32 &= ~mask;
-			*ptr_32 |= mask & color;
+			if (i == get_width() * get_height() - 1) {
+				// Precautions must be taken when setting the final pixel to prevent aliasing
+				uint16_t* ptr_16 = reinterpret_cast<uint16_t*>(ptr); 	
+				*ptr_16 = static_cast<uint16_t>(color);
+				if (bd == 24) {
+					*(ptr+2) = color >> 16;	
+				}
+			} else {
+				// Creates a hole 
+				*ptr_32 &= ~mask; 
+				*ptr_32 |= mask & color;
+			}
 		} else {
 			*ptr_32 = color;
 		}
@@ -182,7 +191,7 @@ void BMP::set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color) {
 void BMP::set_palette(const int& i, const uint32_t& color){ palette[i] = color; }
 
 void BMP::fill(const uint32_t& color){
-	for (int64_t i = 0; i < get_size(); i++){
+	for (int64_t i = 0; i < get_size() - 1; i++){
 		set_pixel(i, color);
 	}
 }
