@@ -37,7 +37,7 @@ void BMP::copy(const std::string& file) {
 	// Read into palette
 	ifs.read(reinterpret_cast<char*>(palette), pal_size());
 
-	// Read image dat, row reversed	
+	// Read image data, row reversed	
 	for (int32_t r = get_height() - 1; r >= 0; r--)
 		ifs.read(reinterpret_cast<char*>(get_row(r)), raw_width);
 
@@ -188,10 +188,14 @@ void BMP::set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color) {
 	set_pixel(x + y * get_width(), color);
 }
 
+uint32_t BMP::set_pixel(const int32_t& x, const int32_t& y) { 
+	get_pixel(x + y * get_width());
+}
+
 void BMP::set_palette(const int& i, const uint32_t& color){ palette[i] = color; }
 
 void BMP::fill(const uint32_t& color){
-	for (int64_t i = 0; i < get_size() - 1; i++){
+	for (int64_t i = 0; i < get_size(); i++){
 		set_pixel(i, color);
 	}
 }
