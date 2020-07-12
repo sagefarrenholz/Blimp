@@ -10,17 +10,42 @@
 #include <iostream>
 #include <cstdio>
 
-/* 
-int BMP::copy(std::string& file) {
-	std::ifstream i(file);
-	//i.see
+void BMP::copy(const std::string& file) {
+	
+	char* strm_out = reinterpret_cast<char*>(&header);
+	
+	std::ifstream ifs{file, std::ios::binary};
+	if (!ifs.good()) throw ifs.rdstate();
 
-	i.close();
-	return 0;
+	// Read BMPHEADER
+	ifs.read(strm_out, 14);
+		
+	// Read in DIBHEADER
+	ifs.read(strm_out + 14, 4);
+
+	// TODO Add support for V4, V5 headers eventually.
+	// Currently, only supports 40 byte V1 DIB Header
+	if (header.header_size > 40) throw "libBMP does not support V4 and V5 headers."; 
+	
+	// Read the rest of the DIBHEADER
+	ifs.read(strm_out + 18, header.header_size - 4);
+
+	// Allocates memory for palette and image data
+	set_bit_depth(header.bit_depth);
+	set_size(header.width, header.height);
+
+	// Read into palette
+	ifs.read(reinterpret_cast<char*>(palette), pal_size());
+
+	// Read image data, bottom to top	
+	for (int32_t r = get_height() - 1; r >= 0; r--)
+		ifs.read(reinterpret_cast<char*>(get_row(r)), raw_width);
+
+	ifs.close();
 }
-*/
 
-void BMP::generate(const std::string& filename) {
+
+void BMP::generate(const std::string& file) {
 	/*
 	 -
 	 -		BMP files are row reversed vertically meaning that the bottom is the top row in 
@@ -44,14 +69,16 @@ void BMP::generate(const std::string& filename) {
 	const size_t data_size = raw_width * height;
 
 	// Open file stream at output directory in binary mode
-	std::ofstream ofs{filename.c_str(), std::ios::binary};
+	std::ofstream ofs{file, std::ios::binary};
+
+	if (!ofs.good()) { throw ofs.rdstate(); }
 
 	// Size of bytes of this BMP image, this includes header, optional palette, and data
-	header.size = sizeof(BMP_Header) + palette.size() * 4U + data_size;
+	header.size = sizeof(BMP_Header) + pal_size()  + data_size;
 	// Offset to the actual picture data
-	header.offset = sizeof(BMP_Header) + palette.size() * 4U;
+	header.offset = sizeof(BMP_Header) + pal_size();
 	// Number of colors in the palette
-	header.color_count = static_cast<uint32_t>(palette.size());
+	header.color_count = static_cast<uint32_t>(pal_size());
 
 	// Write the header to the BMP file
 	ofs.write(reinterpret_cast<char*>(&header), sizeof(BMP_Header));
@@ -59,16 +86,19 @@ void BMP::generate(const std::string& filename) {
 	std::cout << "Generating..." << std::endl;
 
 	//Write the palette to the file if one exists
-	for (unsigned i = 0; i < palette.size(); i++) {
+	/*for (unsigned i = 0; i < palette.size(); i++) {
 		//Palette colors are in the order BGR
 		ofs.write(reinterpret_cast<char*>(&palette[i]), 4);
-	}
-	std::cout << "Writing " << (height * raw_width)/1000.0 << "kB of image data." << std::endl;
-	std::cout << "Total file size " << (header.size)/1000.0 << "kB." << std::endl;
+	}*/
+
+	if (palette != NULL) { ofs.write(reinterpret_cast<char*>(palette), pal_size()); }	
+
+	std::cout << "Writing " << (height * raw_width)/1024.0 << "kB of image data." << std::endl;
+	std::cout << "Total file size " << (header.size)/1024.0 << "kB." << std::endl;
 
 	// Write image data from, rows vertically flipped
 	for (int32_t r = get_height() - 1; r >= 0; r--)
-		ofs.write(reinterpret_cast<char*>(data + r * raw_width), raw_width);
+		ofs.write(reinterpret_cast<char*>(get_row(r)), raw_width);
 
 	ofs.close();
 	
@@ -115,6 +145,8 @@ uint32_t BMP::get_pixel(const size_t& i) const {
 	return color;
 }
 
+uint32_t BMP::get_palette(const uint8_t& i) const { return palette[i]; }
+
 void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 	uint8_t bd = get_bit_depth();
 	uint8_t* ptr = get_pixel_ptr(i);
@@ -147,9 +179,7 @@ void BMP::set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color) {
 	set_pixel(x + y * get_width(), color);
 }
 
-void BMP::set_palette(const int& i, const uint32_t& color){
-	palette[i] = color;
-}
+void BMP::set_palette(const int& i, const uint32_t& color){ palette[i] = color; }
 
 void BMP::fill(const uint32_t& color){
 	for (int64_t i = 0; i < get_size(); i++){

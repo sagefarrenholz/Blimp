@@ -13,11 +13,11 @@ debug: libBMPd.o
 	rm libBMPd.o
 
 BMP_operations.o: src/BMP_operations.cpp
-	g++ -c -o BMP_operations.o src/BMP_operations.cpp
+	g++ -std=c++17 -c -o BMP_operations.o src/BMP_operations.cpp
 
 libBMP.o: src/libBMP.cpp
-	g++ -c -o libBMP.o src/libBMP.cpp
+	g++ -std=c++17 -c -o libBMP.o src/libBMP.cpp
 
 libBMPd.o: src/libBMP.cpp
-	g++ -g1 -c -o libBMPd.o src/libBMP.cpp
+	g++ -std=c++17 -g1 -c -o libBMPd.o src/libBMP.cpp
 
