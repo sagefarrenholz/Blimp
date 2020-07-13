@@ -59,4 +59,4 @@ You can also get and set pixels by index (starting at 0), if you are into that k
 ```
 image.set_pixel(20, red_24bit);
 ```
-![Mandelbrot](https://i.ibb.co/FXMkyq6/mandelbrot.png)
+![Vapor Lena](https://github.com/sagefarrenholz/libBMP/blob/master/samples/lena_vapor.bmp)
