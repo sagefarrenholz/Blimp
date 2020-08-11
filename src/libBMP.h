@@ -44,7 +44,6 @@ class BMP {
 	uint8_t* data = NULL;
 
 	//32bit palette, required for images <= 8 bit depth
-	//std::vector<uint32_t> palette;
 	uint32_t* palette = NULL;
 
 	public:
@@ -58,19 +57,17 @@ class BMP {
 			case 2:
 			case 4:
 			case 8:
-				//palette.assign(pow_2(bit_depth), 0);
 				palette = (uint32_t*) realloc(palette, pow_2(bit_depth));
 				header.bit_depth = bit_depth;
 				break;
 			case 16:
 			case 24:
 			case 32:
-				//palette.resize(0);
 				free(palette);
 				header.bit_depth = bit_depth;
 				break;
 			default:
-				throw "Invalid Bitdepth";
+				throw "Attempting to set invalid bitdepth.";
 		}
 	}
 
@@ -90,10 +87,6 @@ class BMP {
 	}
 
 	//---------- Pixel operations -----------
-	
-	//Functions are defined in the BMP_operations.cpp file
-
-	//FIXME add bounds checking?
 	
 	//By coordinate, indexed at (0, 0)
 	void set_pixel(const int32_t& x, const int32_t& y, const color&);
@@ -116,21 +109,17 @@ class BMP {
 
 	//---------- Information ----------
 
-	uint16_t get_bit_depth() const{ return header.bit_depth; }
+	uint16_t get_bit_depth() const { return header.bit_depth; }
 
-	int32_t get_width() const{ return header.width; }
+	int32_t get_width() const { return header.width; }
 
-	int32_t get_height() const{ return header.height; }
+	int32_t get_height() const { return header.height; }
 
-	long get_size() const{ return header.width * header.height; }
+	long get_size() const { return header.width * header.height; }
 	
 	int32_t get_x_res() const { return header.x_res; }
 
 	int32_t get_y_res() const { return header.y_res; }
-
-	//std::vector<uint32_t>& get_palette() { return palette; }
-
-	//FIXME add bounds checking?
 
 	//Returns a pixel by index, indexed at 0
 	color get_pixel(const size_t& index) const;
@@ -141,7 +130,9 @@ class BMP {
 	//Returns a palette color 
 	color get_palette(const uint8_t& index) const;
 
-	unsigned get_raw_width() { return raw_width; };
+	uint8_t get_palette_size() const;
+
+	unsigned get_raw_width() const { return raw_width; };
 
 	//--------------- I/O ---------------
 
@@ -173,7 +164,7 @@ class BMP {
 	//--------------- Internal Tools ---------------
 	
 	static constexpr uint64_t pow_2(const unsigned& n) { return 1 << n; }
-	constexpr uint16_t pal_size() { return 4 * pow_2(get_bit_depth()); };
+	uint16_t pal_size() { return 4 * pow_2(get_bit_depth()); };
 	
 	//Actual size in bytes of one row
 	unsigned raw_width = 0;

@@ -126,8 +126,20 @@ uint8_t* BMP::get_pixel_ptr(const size_t& i) const {
 	return row + offset * bd / 8;
 }
 
-// Returns the color value of a pixel
+uint8_t BMP::get_palette_size() const { return pow_2(get_bit_depth()); }
+
+uint32_t BMP::get_palette(const uint8_t& i) const { 
+	if (i > get_palette_size()) throw "Attemping to get palette color out of Bounds.";
+	return palette[i]; 
+}
+
+void BMP::set_palette(const int& i, const uint32_t& color){ 
+	if (i > get_palette_size()) throw "Attemping to set palette color out of Bounds.";
+	palette[i] = color; 
+}
+
 uint32_t BMP::get_pixel(const size_t& i) const {
+	if (i > get_size()) throw "Attemping to get pixel out of Bounds";
 	uint8_t bd = get_bit_depth();
 	uint32_t color;
 	const uint8_t* ptr = get_pixel_ptr(i);
@@ -145,9 +157,8 @@ uint32_t BMP::get_pixel(const size_t& i) const {
 	return color;
 }
 
-uint32_t BMP::get_palette(const uint8_t& i) const { return palette[i]; }
-
 void BMP::set_pixel(const size_t& i, const uint32_t& color) {
+	if (i > get_size()) throw "Attemping to set pixel out of Bounds.";
 	uint8_t bd = get_bit_depth();
 	uint8_t* ptr = get_pixel_ptr(i);
 	if (bd >= 8){
@@ -188,11 +199,10 @@ void BMP::set_pixel(const int32_t& x, const int32_t& y, const uint32_t& color) {
 	set_pixel(x + y * get_width(), color);
 }
 
-uint32_t BMP::set_pixel(const int32_t& x, const int32_t& y) { 
-	get_pixel(x + y * get_width());
+uint32_t BMP::get_pixel(const int32_t& x, const int32_t& y) const { 
+	return get_pixel(x + y * get_width());
 }
 
-void BMP::set_palette(const int& i, const uint32_t& color){ palette[i] = color; }
 
 void BMP::fill(const uint32_t& color){
 	for (int64_t i = 0; i < get_size(); i++){
