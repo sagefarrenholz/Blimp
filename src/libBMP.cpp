@@ -85,12 +85,7 @@ void BMP::generate(const std::string& file) {
 
 	std::cout << "Generating..." << std::endl;
 
-	//Write the palette to the file if one exists
-	/*for (unsigned i = 0; i < palette.size(); i++) {
-		//Palette colors are in the order BGR
-		ofs.write(reinterpret_cast<char*>(&palette[i]), 4);
-	}*/
-
+	// Write the palette to the file if one exists
 	if (palette != NULL) { ofs.write(reinterpret_cast<char*>(palette), pal_size()); }	
 
 	std::cout << "Writing " << (height * raw_width)/1024.0 << "kB of image data." << std::endl;
@@ -126,7 +121,10 @@ uint8_t* BMP::get_pixel_ptr(const size_t& i) const {
 	return row + offset * bd / 8;
 }
 
-uint8_t BMP::get_palette_size() const { return pow_2(get_bit_depth()); }
+uint16_t BMP::get_palette_size() const { 
+	if(get_bit_depth() > 8) throw "Attempting to get palette size, image has no palette";
+	return pow_2(get_bit_depth());
+ }
 
 uint32_t BMP::get_palette(const uint8_t& i) const { 
 	if (i > get_palette_size()) throw "Attemping to get palette color out of Bounds.";

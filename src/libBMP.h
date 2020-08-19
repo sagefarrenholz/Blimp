@@ -1,7 +1,7 @@
 /*
- - 
- == Sage Farrenholz, 2020
- -
+ * 
+ * Sage Farrenholz, 2020
+ *
  */
 
 #pragma once
@@ -130,7 +130,7 @@ class BMP {
 	//Returns a palette color 
 	color get_palette(const uint8_t& index) const;
 
-	uint8_t get_palette_size() const;
+	uint16_t get_palette_size() const;
 
 	unsigned get_raw_width() const { return raw_width; };
 
