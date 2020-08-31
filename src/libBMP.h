@@ -24,8 +24,8 @@ class BMP {
 	 == BMP File Format:
 	 * Wikipedia link --> https://en.wikipedia.org/wiki/BMP_file_format#DIB_header_(bitmap_information_header)
 	 * Archived link --> https://web.archive.org/web/20200508042056/https://en.wikipedia.org/wiki/BMP_file_format
-     -
-     == HSL, HSV, and HSB:
+     	 -
+	 == HSL, HSV, and HSB:
 	 * Wikipedia link --> https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
 	 * Archived link --> https://web.archive.org/web/20200626151635/https://en.wikipedia.org/wiki/HSL_and_HSV
 	 - 
@@ -58,7 +58,7 @@ class BMP {
 			case 4:
 			case 8:
 				free(palette);
-				palette = (uint32_t*) calloc(1, pow_2(bit_depth));
+				palette = (uint32_t*) calloc(sizeof(uint32_t), pow_2(bit_depth));
 				header.bit_depth = bit_depth;
 				break;
 			case 16:
@@ -79,7 +79,7 @@ class BMP {
 		// Calculates image data width including padding.
 		calc_raw_width();
 		free(data);
-		data = (uint8_t*) calloc(1, raw_width * height);
+		data = (uint8_t*) calloc(sizeof(uint8_t), raw_width * height);
 	}
 
 	// Sets the resolution of the image, in pixels per meter.

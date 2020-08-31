@@ -86,7 +86,10 @@ void BMP::generate(const std::string& file) {
 	std::cout << "Generating..." << std::endl;
 
 	// Write the palette to the file if one exists
-	if (palette != NULL) { ofs.write(reinterpret_cast<char*>(palette), pal_size()); }	
+	if (palette != NULL) { 
+		std::cout << "Writing " << pal_size() << "B of palette data." << std::endl;
+		ofs.write(reinterpret_cast<char*>(palette), pal_size()); 
+	}	
 
 	std::cout << "Writing " << (height * raw_width)/1024.0 << "kB of image data." << std::endl;
 	std::cout << "Total file size " << (header.size)/1024.0 << "kB." << std::endl;
@@ -150,7 +153,7 @@ uint32_t BMP::get_pixel(const size_t& i) const {
 	} else {
 	// If bitdepth < 8 some bit shifting magic is required to retrieve the color
 		uint8_t bit_offset = i % get_width() % (8 / bd);
-		return (uint32_t)(*ptr >> (7 - bd * bit_offset) & (pow_2(bd) - 1));	
+		return (uint32_t)(*ptr >> (8 - bd * ( 1 + bit_offset)) & (pow_2(bd) - 1));	
 	}
 	return color;
 }
@@ -184,10 +187,10 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 		uint8_t bit_offset = i % get_width() % (8 / bd);
 		// Bit mask
 		uint8_t mask = (pow_2(bd) - 1);
-		// Applies a hole to the byte where data will be places
-		uint8_t ptr_hole = *ptr & ~(mask << (7 - bit_offset * bd));
+		// Applies a hole to the byte where data will be placed
+		uint8_t ptr_hole = *ptr & ~(mask << (8 - bd * (1 + bit_offset)));
 		// Masked and shifted data, mask just in-case given data is larger
-		uint8_t m_data = ((uint8_t)color & mask) << (7 - bd * bit_offset); 
+		uint8_t m_data = ((uint8_t) color & mask) << (8 - bd * (1 + bit_offset)); 
 		// Fill hole with masked and shifted data
 		*ptr = ptr_hole | m_data;	
 	}
@@ -203,8 +206,15 @@ uint32_t BMP::get_pixel(const int32_t& x, const int32_t& y) const {
 
 
 void BMP::fill(const uint32_t& color){
+	std::cout << "get_size() " << get_size() << std::endl;
+	std::cout << "get_palette_size() " << get_palette_size() << std::endl;
+	std::cout << "get_bit_depth() " << get_bit_depth() << std::endl;
+
 	for (int64_t i = 0; i < get_size(); i++){
 		set_pixel(i, color);
+		if (i == get_size() - 1) {
+				
+		}
 	}
 }
 
