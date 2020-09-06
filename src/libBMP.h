@@ -7,9 +7,7 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
 #include <string>
-#include <cmath>
 
 #include "BMP_header.h"
 
@@ -19,15 +17,11 @@ class BMP {
 
 	/*
 	 -
-	 - I found the following links useful for information about the BMP image format, HSL, HSV, and bit depth.
+	 - I found the following links useful for information about the BMP image format and bit depth.
 	 -
 	 == BMP File Format:
 	 * Wikipedia link --> https://en.wikipedia.org/wiki/BMP_file_format#DIB_header_(bitmap_information_header)
 	 * Archived link --> https://web.archive.org/web/20200508042056/https://en.wikipedia.org/wiki/BMP_file_format
-     	 -
-	 == HSL, HSV, and HSB:
-	 * Wikipedia link --> https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
-	 * Archived link --> https://web.archive.org/web/20200626151635/https://en.wikipedia.org/wiki/HSL_and_HSV
 	 - 
 	 == Color Bit Depth:
 	 * Wikipedia link --> https://en.wikipedia.org/wiki/Color_depth  
@@ -46,9 +40,9 @@ class BMP {
 	// 32bit palette, required for images <= 8 bit depth.
 	uint32_t* palette = NULL;
 
-	public:
-
 	//--------------- Image attribute operations ---------------
+
+	public:
 
 	// Set the bit depth of the image.
 	void set_bit_depth(const uint16_t& bit_depth) {
@@ -164,9 +158,10 @@ class BMP {
 		free(palette);
 	}
 
-	private:
 	
 	//--------------- Internal Tools ---------------
+
+	private:
 	
 	static constexpr uint64_t pow_2(const unsigned& n) { return 1 << n; }
 	uint16_t pal_size() { return 4 * pow_2(get_bit_depth()); };
