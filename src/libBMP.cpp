@@ -6,16 +6,28 @@
 
 #include "libBMP.h"
 
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <cstdio>
+#include <cstring>
+
+void BMP::copy(const BMP& from) {
+	this->header = from.header;	
+	set_bit_depth(from.get_bit_depth());
+	set_size(from.get_width(), from.get_height());
+	// TODO implement functions for retrieval of image size in bytes
+	memcpy(this->data, from.data, from.get_raw_width() * from.get_height());
+	if (get_bit_depth() <= 8)
+		memcpy(this->palette, from.palette, from.pal_size());
+}
 
 void BMP::copy(const std::string& file) {
 	
 	char* strm_out = reinterpret_cast<char*>(&header);
 	
 	std::ifstream ifs{file, std::ios::binary};
-	if (!ifs.good()) throw ifs.rdstate();
+	if (!ifs.good()) throw std::runtime_error("Input file stream ifs, failed to open file \"" + file + "\" for reading with rdstate() " + std::to_string(ifs.rdstate()));
 
 	// Read BMPHEADER
 	ifs.read(strm_out, 14);
@@ -25,7 +37,7 @@ void BMP::copy(const std::string& file) {
 
 	// TODO Add support for V4, V5 headers eventually.
 	// Currently, only supports 40 byte V1 DIB Header
-	if (header.header_size > 40) throw "libBMP does not support V4 and V5 headers."; 
+	if (header.header_size > 40) throw std::invalid_argument("libBMP does not support V4 and V5 headers."); 
 	
 	// Read the rest of the DIBHEADER
 	ifs.read(strm_out + 18, header.header_size - 4);
@@ -58,10 +70,6 @@ void BMP::generate(const std::string& file) {
 	 -
 	 */
 
-	// Bit depth
-	const auto& bit_depth = get_bit_depth();
-	// Image width
-	const auto& width = get_width();
 	// Image height
 	const auto& height = get_height();
 
@@ -71,7 +79,7 @@ void BMP::generate(const std::string& file) {
 	// Open file stream at output directory in binary mode
 	std::ofstream ofs{file, std::ios::binary};
 
-	if (!ofs.good()) { throw ofs.rdstate(); }
+	if (!ofs.good()) throw std::runtime_error("Output file stream ofs, failed to open file \"" + file + "\" for writing with rdstate() " + std::to_string(ofs.rdstate()));
 
 	// Size of bytes of this BMP image, this includes header, optional palette, and data
 	header.size = sizeof(BMP_Header) + pal_size()  + data_size;
@@ -109,6 +117,7 @@ void BMP::calc_raw_width() {
 }
 
 uint8_t* BMP::get_row(const uint32_t& r) const {
+	if (r > get_height()) throw std::out_of_range("Attempting to get row out of bounds.");
 	// Returns a pointer to the beginning of row 'r' of the image
 	return data + raw_width * r;
 }
@@ -125,22 +134,22 @@ uint8_t* BMP::get_pixel_ptr(const size_t& i) const {
 }
 
 uint16_t BMP::get_palette_size() const { 
-	if(get_bit_depth() > 8) throw "Attempting to get palette size, image has no palette";
+	if(get_bit_depth() > 8) throw std::logic_error("Attempting to get palette size, image has no palette");
 	return pow_2(get_bit_depth());
  }
 
 uint32_t BMP::get_palette(const uint8_t& i) const { 
-	if (i > get_palette_size()) throw "Attemping to get palette color out of Bounds.";
+	if (i > get_palette_size()) throw std::out_of_range("Attempting to get palette color out of bounds.");
 	return palette[i]; 
 }
 
 void BMP::set_palette(const int& i, const uint32_t& color){ 
-	if (i > get_palette_size()) throw "Attemping to set palette color out of Bounds.";
+	if (i > get_palette_size()) throw std::out_of_range("Attempting to set palette color out of bounds.");
 	palette[i] = color; 
 }
 
 uint32_t BMP::get_pixel(const size_t& i) const {
-	if (i > get_size()) throw "Attemping to get pixel out of Bounds";
+	if (i > get_size()) throw std::out_of_range("Attempting to get pixel out of bounds.");
 	uint8_t bd = get_bit_depth();
 	uint32_t color;
 	const uint8_t* ptr = get_pixel_ptr(i);
@@ -151,7 +160,7 @@ uint32_t BMP::get_pixel(const size_t& i) const {
 		else 
 			color = *ptr_32;
 	} else {
-	// If bitdepth < 8 some bit shifting magic is required to retrieve the color
+		// If bitdepth < 8 some bit shifting magic is required to retrieve the color
 		uint8_t bit_offset = i % get_width() % (8 / bd);
 		return (uint32_t)(*ptr >> (8 - bd * ( 1 + bit_offset)) & (pow_2(bd) - 1));	
 	}
@@ -159,7 +168,7 @@ uint32_t BMP::get_pixel(const size_t& i) const {
 }
 
 void BMP::set_pixel(const size_t& i, const uint32_t& color) {
-	if (i > get_size()) throw "Attemping to set pixel out of Bounds.";
+	if (i > get_size()) throw std::out_of_range("Attempting to set pixel out of bounds.");
 	uint8_t bd = get_bit_depth();
 	uint8_t* ptr = get_pixel_ptr(i);
 	if (bd >= 8){
@@ -183,7 +192,7 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 			*ptr_32 = color;
 		}
 	} else {
-	// If bitdepth < 8 some bit shifting magic is required to retrieve the color
+		// If bitdepth < 8 some bit shifting magic is required to retrieve the color
 		uint8_t bit_offset = i % get_width() % (8 / bd);
 		// Bit mask
 		uint8_t mask = (pow_2(bd) - 1);
@@ -193,6 +202,7 @@ void BMP::set_pixel(const size_t& i, const uint32_t& color) {
 		uint8_t m_data = ((uint8_t) color & mask) << (8 - bd * (1 + bit_offset)); 
 		// Fill hole with masked and shifted data
 		*ptr = ptr_hole | m_data;	
+		if (color != get_pixel(i)) throw std::runtime_error("Pixel at index " + std::to_string(i) + " of color " + std::to_string(color) + " does not equal retrieved color of " + std::to_string(get_pixel(i)));
 	}
 }
 
@@ -206,10 +216,6 @@ uint32_t BMP::get_pixel(const int32_t& x, const int32_t& y) const {
 
 
 void BMP::fill(const uint32_t& color){
-	std::cout << "get_size() " << get_size() << std::endl;
-	std::cout << "get_palette_size() " << get_palette_size() << std::endl;
-	std::cout << "get_bit_depth() " << get_bit_depth() << std::endl;
-
 	for (int64_t i = 0; i < get_size(); i++){
 		set_pixel(i, color);
 		if (i == get_size() - 1) {

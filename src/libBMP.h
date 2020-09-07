@@ -8,6 +8,9 @@
 
 #include <cstdint>
 #include <string>
+#include <memory>
+#include <exception>
+#include <stdexcept>
 
 #include "BMP_header.h"
 
@@ -62,7 +65,7 @@ class BMP {
 				header.bit_depth = bit_depth;
 				break;
 			default:
-				throw "Attempting to set invalid bitdepth.";
+				throw std::logic_error("Attempting to set invalid bitdepth.");
 		}
 	}
 
@@ -135,8 +138,11 @@ class BMP {
 
 	//--------------- I/O ---------------
 
-	// Copy from another image.
+	// Copy from a BMP image file.
 	void copy(const std::string& file);
+	
+	// Copy from another BMP object
+	void copy(const BMP& from);
 
 	// Generate the current image to the output directory.
 	void generate(const std::string& name);
@@ -152,19 +158,22 @@ class BMP {
 		copy(filename);
 	};	
 
+	BMP(const BMP& from) {
+		copy(from);
+	}
+
 	//--------------- Destructor ---------------
 	~BMP() {
 		free(data);
 		free(palette);
 	}
-
 	
 	//--------------- Internal Tools ---------------
 
 	private:
 	
 	static constexpr uint64_t pow_2(const unsigned& n) { return 1 << n; }
-	uint16_t pal_size() { return 4 * pow_2(get_bit_depth()); };
+	uint16_t pal_size() const { return 4 * pow_2(get_bit_depth()); };
 	
 	// Actual size in bytes of one row.
 	unsigned raw_width = 0;
