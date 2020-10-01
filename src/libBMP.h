@@ -97,7 +97,7 @@ class BMP {
 	void set_palette(const int& i, const color&); 
 
 	// Fill the image with one color.
-	void fill(const uint32_t& color);
+	void fill(const color&);
 
 	// Fill one row with a color.
 	void fill_row(const int32_t& row, const color&);
