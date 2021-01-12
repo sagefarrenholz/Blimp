@@ -1,15 +1,15 @@
-libBMP.a: libBMP.o
+libBlimp.a: blimp.o
 	mkdir -p bin
-	ar rcs bin/libBMP.a libBMP.o
-	rm libBMP.o
+	ar rcs bin/libBlimp.a blimp.o
+	rm blimp.o
 
-debug: libBMPd.o
+debug: blimp.o
 	mkdir -p bin/debug
-	ar rcs bin/debug/libBMPd.a libBMPd.o
-	rm libBMPd.o
+	ar rcs bin/debug/blimp.a blimp.o
+	rm blimp.o
 
-libBMP.o: src/libBMP.cpp
-	g++ -Wall -std=c++17 -c -o libBMP.o src/libBMP.cpp
+blimp.o: src/blimp.cpp
+	g++ -Wall -std=c++17 -c -o blimp.o src/blimp.cpp
 
-libBMPd.o: src/libBMP.cpp
-	g++ -Wall -std=c++17 -g1 -c -o libBMPd.o src/libBMP.cpp
+blimp.o: src/blimp.cpp
+	g++ -Wall -std=c++17 -g1 -c -o blimp.o src/blimp.cpp

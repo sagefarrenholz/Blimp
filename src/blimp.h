@@ -49,14 +49,17 @@ class BMP {
             case 2:
             case 4:
             case 8:
-                free(palette);
+		if (palette != nullptr) free(palette);
                 palette = reinterpret_cast<uint32_t*>(calloc(sizeof(uint32_t), pow_2(bit_depth)));
                 header.bit_depth = bit_depth;
                 break;
             case 16:
             case 24:
             case 32:
-                free(palette);
+		if (palette != nullptr) {
+			free(palette);
+			palette = nullptr;
+		}
                 header.bit_depth = bit_depth;
                 break;
             default:
