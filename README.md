@@ -11,8 +11,8 @@ Just the C standard library, C math library, and C++ standard library.
 
 ## Installing
 1. Run `make` in the root directory of  the project. This creates the static library in the bin directory.
-2. Include libBMP.h.
-3. Link against libBMP.a.
+2. Include blimp.h
+3. Link against blimp.a
 
 ## Getting Started
 Intialize your image. By default a new BMP image is 64 x 64 and has a bit depth of 24.
@@ -38,7 +38,7 @@ Generate your image with `generate(string filename)`.
 ```
 image.generate("thebestpic.bmp");
 ```
-libBMP uses 32-bit integers for color but provides a simple alias for readability: `color`. 
+Blimp uses 32-bit integers for color but provides a simple alias for readability: `color`. 
 ```
 color red_24bit = 0xFF0000;
 color blue_16bit = 0x001F;
@@ -59,4 +59,4 @@ You can also get and set pixels by index (starting at 0), if you are into that k
 ```
 image.set_pixel(20, red_24bit);
 ```
-![Vapor Lena](https://github.com/sagefarrenholz/libBMP/blob/master/samples/lena_vapor.bmp)
+![Vapor Lena](https://github.com/sagefarrenholz/Blimp/blob/master/samples/lena_vapor.bmp)
