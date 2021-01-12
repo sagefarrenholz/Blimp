@@ -1,6 +1,6 @@
 /* Copyright 2020, Sage Farrenholz */
 
-#include "libBMP.h"
+#include "blimp.h"
 
 #include <cmath>
 #include <fstream>

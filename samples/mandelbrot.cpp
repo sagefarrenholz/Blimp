@@ -1,5 +1,5 @@
 //Change this to your include directory.
-#include "../src/libBMP.h"
+#include "../src/blimp.h"
 
 #include <iostream>
 
