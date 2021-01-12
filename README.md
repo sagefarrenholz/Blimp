@@ -1,4 +1,4 @@
-# libBMP
+# Blimp
 A lightweight C++ library that allows for the generation and manipulation of Bitmap images. Supports modern and low bit depths.
 
 ## Features
