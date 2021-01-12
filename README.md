@@ -1,5 +1,5 @@
-# libBMP
-A lightweight C++ library that allows for the generation and manipulation of Bitmap images. Supports modern and low bit depths.
+# Blimp
+A dead simple library for handling BMP format images. Great for programs that need fast image generation without the complexity. Support for antiquated bit depths such as 1, 2, 4, 8, 16, as well as modern bit depths: 24 and 32.
 
 ## Features
 - BMP image generation at all BMP supported bitdepths: 1, 2, 4, 8, 16, 24, and 32;
