@@ -2,9 +2,18 @@
 A dead simple library for handling BMP format images. Great for programs that need fast image generation without the complexity. Support for antiquated bit depths such as 1, 2, 4, 8, 16, as well as modern bit depths: 24 and 32.
 
 ## Features
-- BMP image generation at all BMP supported bitdepths: 1, 2, 4, 8, 16, 24, and 32;
-- Fast in-memory manipulation of images with lightweight getter and setter wrappers for pixels.
-- A primitve but powerful interface that stays out of your way.
+- [x] Exporting and loading with BMPINFOHEADER.
+- [x] Pixel setting and getting.
+- [x] Row filling, column filling, image fill.
+- [x] Low bit depth support (1, 2, 4, 8, 16).
+- [x] Palette swapping / modifying.
+- [x] Row fill, column fill, image fill.
+- [ ] Compression support.
+- [ ] Exporting and loading with BITMAPV4HEADER & BITMAPV5HEADER.
+- [ ] Image scaling: nearest neighbor, linear interpolation.
+- [ ] Image crop, reflect, rotate.
+- [ ] Multiple image overlaying / merging.
+- [ ] Extra effects like dither fills, filters, etc.
 
 ## Dependencies
 Just the C standard library, C math library, and C++ standard library.
@@ -12,7 +21,7 @@ Just the C standard library, C math library, and C++ standard library.
 ## Installing
 1. Run `make` in the root directory of  the project. This creates the static library in the bin directory.
 2. Include blimp.h
-3. Link against blimp.a
+3. Link against libBlimp.a
 
 ## Getting Started
 Intialize your image. By default a new BMP image is 64 x 64 and has a bit depth of 24.
