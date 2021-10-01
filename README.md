@@ -12,11 +12,13 @@ A dead simple library for handling BMP format images. Great for programs that ne
 - [ ] Exporting and loading with BITMAPV4HEADER & BITMAPV5HEADER.
 - [ ] Image scaling: nearest neighbor, linear interpolation.
 - [ ] Image crop, reflect, rotate.
-- [ ] Multiple image overlaying / merging.
+- [ ] Multiple image overlaying, merging, stiching, etc.
 - [ ] Extra effects like dither fills, filters, etc.
+- [ ] GPU acceleration and mutlithreading
 
 ## Dependencies
-Just the C standard library, C math library, and C++ standard library.
+- C standard library, C math library, and C++ standard library.
+- Catch2 for testing.
 
 ## Installing
 1. Run `make` in the root directory of  the project. This creates the static library in the bin directory.
